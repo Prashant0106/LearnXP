@@ -4,6 +4,9 @@ import { useProfile } from '../hooks/useProfile'
 
 const links = [
   { to: '/', label: 'Dashboard', icon: '🏠' },
+  { to: '/flashcards', label: 'Flashcards', icon: '🃏' },
+  { to: '/daily', label: 'Daily Challenge', icon: '🎯' },
+  { to: '/timer', label: 'Study Timer', icon: '⏱️' },
   { to: '/quizzes', label: 'Quizzes', icon: '⚡' },
   { to: '/subjects', label: 'Subjects', icon: '📖' },
   { to: '/badges', label: 'Badges', icon: '🏅' },

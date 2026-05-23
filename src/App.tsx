@@ -13,6 +13,9 @@ import Subjects from './pages/Subjects'
 import Login from './pages/Login'
 import Toast from './components/Toast'
 import SubjectDetail from './pages/SubjectDetail'
+import DailyChallenge from './pages/DailyChallenge'
+import StudyTimer from './pages/StudyTimer'
+import Flashcards from './pages/Flashcards'
 
 
 
@@ -60,6 +63,9 @@ export default function App() {
         <main className="flex-1 overflow-y-auto p-6 bg-gray-950">
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/flashcards" element={<Flashcards />} />
+            <Route path="/daily" element={<DailyChallenge />} />
+            <Route path="/timer" element={<StudyTimer />} />
             <Route path="/quizzes" element={<Quizzes />} />
             <Route path="/subject/:code" element={<SubjectDetail />} />
             <Route path="/badges" element={<Badges />} />

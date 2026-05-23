@@ -1,23 +1,36 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-const subjectData: Record<string, {
+type ModuleStatus = 'done' | 'active' | 'todo'
+
+type SubjectModule = {
+  name: string
+  status: ModuleStatus
+  questions: number
+}
+
+type SubjectInfo = {
   code: string
   name: string
   color: string
   bar: string
   bg: string
+  text: string
   pct: number
   done: number
   total: number
-  modules: { name: string; status: 'done' | 'active' | 'todo'; questions: number }[]
-}> = {
+  modules: SubjectModule[]
+  icon?: string
+}
+
+const hardcodedSubjects: Record<string, SubjectInfo> = {
   CS301: {
     code: 'CS301',
     name: 'Data Structures & Algorithms',
     color: 'text-violet-400',
-    bg: 'bg-violet-500/10 border-violet-500/20',
     bar: 'bg-violet-500',
+    bg: 'bg-violet-500/10 border-violet-500/20',
+    text: 'text-violet-400',
     pct: 72,
     done: 18,
     total: 25,
@@ -33,8 +46,9 @@ const subjectData: Record<string, {
     code: 'MATH202',
     name: 'Linear Algebra',
     color: 'text-teal-400',
-    bg: 'bg-teal-500/10 border-teal-500/20',
     bar: 'bg-teal-500',
+    bg: 'bg-teal-500/10 border-teal-500/20',
+    text: 'text-teal-400',
     pct: 45,
     done: 9,
     total: 20,
@@ -50,8 +64,9 @@ const subjectData: Record<string, {
     code: 'PHY101',
     name: 'Classical Mechanics',
     color: 'text-orange-400',
-    bg: 'bg-orange-500/10 border-orange-500/20',
     bar: 'bg-orange-500',
+    bg: 'bg-orange-500/10 border-orange-500/20',
+    text: 'text-orange-400',
     pct: 88,
     done: 22,
     total: 25,
@@ -67,8 +82,9 @@ const subjectData: Record<string, {
     code: 'ENG110',
     name: 'Technical Writing',
     color: 'text-yellow-400',
-    bg: 'bg-yellow-500/10 border-yellow-500/20',
     bar: 'bg-yellow-500',
+    bg: 'bg-yellow-500/10 border-yellow-500/20',
+    text: 'text-yellow-400',
     pct: 30,
     done: 6,
     total: 20,
@@ -80,6 +96,15 @@ const subjectData: Record<string, {
       { name: 'Revision', status: 'todo', questions: 8 },
     ],
   },
+}
+
+const colorMap: Record<string, { bar: string; bg: string; text: string }> = {
+  'bg-violet-500/10 border-violet-500/20 text-violet-400': { bar: 'bg-violet-500', bg: 'bg-violet-500/10 border-violet-500/20', text: 'text-violet-400' },
+  'bg-teal-500/10 border-teal-500/20 text-teal-400': { bar: 'bg-teal-500', bg: 'bg-teal-500/10 border-teal-500/20', text: 'text-teal-400' },
+  'bg-orange-500/10 border-orange-500/20 text-orange-400': { bar: 'bg-orange-500', bg: 'bg-orange-500/10 border-orange-500/20', text: 'text-orange-400' },
+  'bg-yellow-500/10 border-yellow-500/20 text-yellow-400': { bar: 'bg-yellow-500', bg: 'bg-yellow-500/10 border-yellow-500/20', text: 'text-yellow-400' },
+  'bg-pink-500/10 border-pink-500/20 text-pink-400': { bar: 'bg-pink-500', bg: 'bg-pink-500/10 border-pink-500/20', text: 'text-pink-400' },
+  'bg-blue-500/10 border-blue-500/20 text-blue-400': { bar: 'bg-blue-500', bg: 'bg-blue-500/10 border-blue-500/20', text: 'text-blue-400' },
 }
 
 const pillClass = (status: string) => {
@@ -97,8 +122,41 @@ const statusLabel = (status: string) => {
 export default function SubjectDetail() {
   const { code } = useParams()
   const navigate = useNavigate()
-  const subject = subjectData[code || '']
   const [activeTab, setActiveTab] = useState<'overview' | 'modules' | 'quiz'>('overview')
+
+  // First check hardcoded subjects
+  let subject: SubjectInfo | null = hardcodedSubjects[code || ''] || null
+
+  // If not found, check localStorage subjects
+  if (!subject) {
+    try {
+      const saved = localStorage.getItem('learnxp_subjects')
+      if (saved) {
+        const localSubjects = JSON.parse(saved)
+        const found = localSubjects.find((s: { code: string }) => s.code === code)
+        if (found) {
+          const colors = colorMap[found.color] || { bar: 'bg-violet-500', bg: 'bg-violet-500/10 border-violet-500/20', text: 'text-violet-400' }
+          subject = {
+            code: found.code,
+            name: found.name,
+            color: colors.text,
+            bar: colors.bar,
+            bg: colors.bg,
+            text: colors.text,
+            pct: 0,
+            done: 0,
+            total: found.modules.length,
+            icon: found.icon,
+            modules: found.modules.map((m: string, i: number) => ({
+              name: m,
+              status: i === 0 ? 'active' : 'todo' as ModuleStatus,
+              questions: 10,
+            })),
+          }
+        }
+      }
+    } catch { }
+  }
 
   if (!subject) {
     return (
@@ -132,9 +190,12 @@ export default function SubjectDetail() {
       <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-6">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <span className={`text-xs font-mono font-semibold px-2 py-1 rounded-full border ${subject.bg} ${subject.color} inline-block mb-3`}>
-              {subject.code}
-            </span>
+            <div className="flex items-center gap-2 mb-3">
+              {subject.icon && <span className="text-2xl">{subject.icon}</span>}
+              <span className={`text-xs font-mono font-semibold px-2 py-1 rounded-full border ${subject.bg} ${subject.text} inline-block`}>
+                {subject.code}
+              </span>
+            </div>
             <h2 className="text-2xl font-black text-white mb-1">{subject.name}</h2>
             <p className="text-gray-400 text-sm">{subject.modules.length} topics · {totalQuestions} total questions</p>
           </div>
@@ -150,7 +211,7 @@ export default function SubjectDetail() {
         <div className="mb-2">
           <div className="flex justify-between text-sm mb-2">
             <span className="text-gray-400">Overall Progress</span>
-            <span className={`font-mono font-bold ${subject.color}`}>{subject.pct}%</span>
+            <span className={`font-mono font-bold ${subject.text}`}>{subject.pct}%</span>
           </div>
           <div className="bg-gray-800 rounded-full h-3">
             <div className={`${subject.bar} h-3 rounded-full transition-all`} style={{ width: `${subject.pct}%` }} />
@@ -194,7 +255,7 @@ export default function SubjectDetail() {
           <div className="flex flex-col gap-3">
             {subject.modules.map(m => (
               <div key={m.name} className="flex items-center gap-4">
-                <div className="w-32 text-sm text-white font-medium truncate">{m.name}</div>
+                <div className="w-36 text-sm text-white font-medium truncate">{m.name}</div>
                 <div className="flex-1 bg-gray-800 rounded-full h-2">
                   <div
                     className={`h-2 rounded-full ${m.status === 'done' ? 'bg-teal-500' : m.status === 'active' ? 'bg-violet-500' : 'bg-gray-700'}`}
@@ -233,7 +294,9 @@ export default function SubjectDetail() {
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center">
           <div className="text-5xl mb-4">⚡</div>
           <div className="text-xl font-black text-white mb-2">Ready to test your knowledge?</div>
-          <p className="text-gray-400 text-sm mb-6">Start a quiz on {subject.name} and earn XP for every correct answer!</p>
+          <p className="text-gray-400 text-sm mb-6">
+            Start a quiz on <span className="text-violet-400 font-bold">{subject.name}</span> and earn XP for every correct answer!
+          </p>
           <button
             onClick={() => navigate('/quizzes')}
             className="bg-violet-600 hover:bg-violet-700 text-white font-bold px-8 py-3 rounded-xl transition-all"
