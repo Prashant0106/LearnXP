@@ -16,6 +16,10 @@ import SubjectDetail from './pages/SubjectDetail'
 import DailyChallenge from './pages/DailyChallenge'
 import StudyTimer from './pages/StudyTimer'
 import Flashcards from './pages/Flashcards'
+import Notes from './pages/Notes'
+import Analytics from './pages/Analytics'
+import StudyPlanner from './pages/StudyPlanner'
+import Friends from './pages/Friends'
 
 
 
@@ -66,13 +70,17 @@ export default function App() {
             <Route path="/flashcards" element={<Flashcards />} />
             <Route path="/daily" element={<DailyChallenge />} />
             <Route path="/timer" element={<StudyTimer />} />
+            <Route path="/planner" element={<StudyPlanner />} />
             <Route path="/quizzes" element={<Quizzes />} />
             <Route path="/subject/:code" element={<SubjectDetail />} />
             <Route path="/badges" element={<Badges />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/progress" element={<Progress />} />
             <Route path="/subjects" element={<Subjects />} />
+            <Route path="/notes" element={<Notes />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/friends" element={<Friends />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>

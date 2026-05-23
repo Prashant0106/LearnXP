@@ -4,15 +4,19 @@ import { useProfile } from '../hooks/useProfile'
 
 const links = [
   { to: '/', label: 'Dashboard', icon: '🏠' },
+  { to: '/subjects', label: 'Subjects', icon: '📖' },
+  { to: '/notes', label: 'Notes', icon: '📝' },
+  { to: '/quizzes', label: 'Quizzes', icon: '⚡' },
   { to: '/flashcards', label: 'Flashcards', icon: '🃏' },
   { to: '/daily', label: 'Daily Challenge', icon: '🎯' },
+  { to: '/analytics', label: 'Analytics', icon: '📊' },
+  { to: '/planner', label: 'Study Planner', icon: '📅' },
   { to: '/timer', label: 'Study Timer', icon: '⏱️' },
-  { to: '/quizzes', label: 'Quizzes', icon: '⚡' },
-  { to: '/subjects', label: 'Subjects', icon: '📖' },
   { to: '/badges', label: 'Badges', icon: '🏅' },
   { to: '/leaderboard', label: 'Leaderboard', icon: '🏆' },
   { to: '/progress', label: 'Progress', icon: '📈' },
   { to: '/profile', label: 'Profile', icon: '👤' },
+  { to: '/friends', label: 'Friends', icon: '👥' },
 ]
 
 export default function Sidebar() {
