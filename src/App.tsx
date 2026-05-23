@@ -20,6 +20,7 @@ import Notes from './pages/Notes'
 import Analytics from './pages/Analytics'
 import StudyPlanner from './pages/StudyPlanner'
 import Friends from './pages/Friends'
+import MultiplayerQuiz from './pages/MultiplayerQuiz'
 
 
 
@@ -62,7 +63,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="flex h-screen bg-gray-950 text-white">
+      <div className="flex h-screen bg-gray-950 text-white overflow-hidden">
         <Sidebar />
         <main className="flex-1 overflow-y-auto p-6 bg-gray-950">
           <Routes>
@@ -72,6 +73,7 @@ export default function App() {
             <Route path="/timer" element={<StudyTimer />} />
             <Route path="/planner" element={<StudyPlanner />} />
             <Route path="/quizzes" element={<Quizzes />} />
+            <Route path="/multiplayer" element={<MultiplayerQuiz />} />
             <Route path="/subject/:code" element={<SubjectDetail />} />
             <Route path="/badges" element={<Badges />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
